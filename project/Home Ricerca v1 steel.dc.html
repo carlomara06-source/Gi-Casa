@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="industry.css">
+<style>
+body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)}
+a{color:var(--color-accent-700);text-decoration:none}
+a:hover{color:var(--color-accent-900)}
+.pz-scroll::-webkit-scrollbar{width:0}
+</style>
+</helmet>
+
+<div style="display:flex;gap:56px;align-items:flex-start;padding:48px 56px;min-height:100vh;flex-wrap:wrap">
+
+<div style="flex:none">
+<div style="display:flex;align-items:baseline;gap:10px;margin:0 0 18px">
+<span style="font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;padding:5px 8px;background:var(--color-accent-900);color:#fff">SCHERMATA 01</span>
+<span style="font-family:var(--font-heading);font-size:20px;letter-spacing:-.01em">Home &amp; Ricerca · lato acquirente</span>
+</div>
+
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="position:relative;min-height:100%;background:var(--color-bg);padding-top:54px">
+
+<div style="position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:10px 16px 10px;background:var(--color-bg);border-bottom:1px solid var(--color-divider)">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="width:16px;height:16px;border:1.5px solid var(--color-accent-700);position:relative"><div style="position:absolute;left:50%;top:-1.5px;bottom:-1.5px;width:1.5px;background:var(--color-accent-700)"></div></div>
+<span style="font-family:var(--font-heading);font-weight:600;font-size:19px;letter-spacing:.02em;text-transform:uppercase">Pianozero</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font:500 10px/1 var(--font-body);letter-spacing:.08em;padding:5px 7px;border:1px solid var(--color-accent-400);color:var(--color-accent-800)">0% VENDITORE</span>
+<div onClick="{{ openSoon }}" style="width:30px;height:30px;border:1px solid var(--color-divider);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3.5px;cursor:pointer" style-hover="background:var(--color-accent-100)">
+<div style="width:13px;height:1.5px;background:var(--color-text)"></div>
+<div style="width:13px;height:1.5px;background:var(--color-text)"></div>
+<div style="width:9px;height:1.5px;background:var(--color-text)"></div>
+</div>
+</div>
+</div>
+
+<div style="padding:22px 16px 18px">
+<div style="font:500 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--color-accent-700);margin-bottom:10px">TARIFFA FISSA · NESSUNA PERCENTUALE</div>
+<h1 style="font-size:38px;line-height:.98;letter-spacing:-.02em;margin:0 0 12px">Vendi a zero.<br>Compri a tariffa fissa.</h1>
+<p style="font-size:14px;line-height:1.5;color:var(--color-neutral-700);margin:0 0 18px;text-wrap:pretty">Chi vende non paga provvigioni. Chi compra conosce il costo dal primo click: una cifra fissa a scaglioni, non il 3% del prezzo.</p>
+
+<div class="blueprint" style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--color-divider)">
+<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div style="background:var(--color-bg);padding:2px 12px 2px 0">
+<div style="font:500 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--color-neutral-600);margin-bottom:6px">VENDITORE</div>
+<div style="font-family:var(--font-heading);font-size:30px;line-height:1">0%</div>
+<div style="font-size:11.5px;color:var(--color-neutral-700)">commissioni, sempre</div>
+</div>
+<div style="background:var(--color-bg);padding:2px 0 2px 12px">
+<div style="font:500 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--color-neutral-600);margin-bottom:6px">ACQUIRENTE</div>
+<div style="font-family:var(--font-heading);font-size:30px;line-height:1">da 1.290 €</div>
+<div onClick="{{ openTiers }}" style="font-size:11.5px;color:var(--color-accent-700);cursor:pointer;text-decoration:underline;text-underline-offset:3px">vedi i 5 scaglioni</div>
+</div>
+</div>
+</div>
+
+<div style="padding:0 16px 14px">
+<div class="blueprint" style="display:flex;align-items:stretch;background:#fff">
+<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div style="display:flex;align-items:center;padding-left:12px;color:var(--color-neutral-600)">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5 21 21"></path></svg>
+</div>
+<input value="{{ query }}" onChange="{{ onQuery }}" placeholder="Città, zona o indirizzo" style="flex:1;min-width:0;border:0;outline:none;background:transparent;font-family:var(--font-body);font-size:14px;padding:13px 10px;color:var(--color-text)">
+<div onClick="{{ noop }}" style="display:flex;align-items:center;padding:0 16px;background:var(--color-accent);color:#fff;font-family:var(--font-heading);font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-600)">Cerca</div>
+</div>
+
+<div style="display:flex;gap:7px;margin-top:12px;overflow-x:auto;padding-bottom:2px">
+<sc-for list="{{ chips }}" as="chip" hint-placeholder-count="4">
+<div onClick="{{ chip.toggle }}" style="{{ chip.style }}">{{ chip.label }}</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 16px 12px;gap:12px">
+<div style="font:500 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;color:var(--color-neutral-600)">{{ countLabel }}</div>
+<div style="display:flex;border:1px solid var(--color-divider)">
+<div onClick="{{ showLista }}" style="{{ segListaStyle }}">Lista</div>
+<div onClick="{{ showMappa }}" style="{{ segMappaStyle }}">Mappa</div>
+</div>
+</div>
+
+<sc-if value="{{ isMappa }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 16px 16px">
+<div class="blueprint" style="position:relative;height:320px;overflow:hidden;background:linear-gradient(0deg,var(--color-divider) 1px,transparent 1px) 0 0/100% 26px,linear-gradient(90deg,var(--color-divider) 1px,transparent 1px) 0 0/26px 100%,var(--color-accent-100)">
+<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div style="position:absolute;left:0;right:0;top:44%;height:14px;background:var(--color-accent-200);transform:rotate(-7deg)"></div>
+<div style="position:absolute;top:8px;left:8px;font:500 9px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--color-accent-800)">MAPPA INTERATTIVA · PLACEHOLDER</div>
+<sc-for list="{{ pins }}" as="pin" hint-placeholder-count="4">
+<div onClick="{{ pin.select }}" style="{{ pin.style }}">{{ pin.fee }}</div>
+</sc-for>
+</div>
+<div class="blueprint" style="margin-top:14px;padding:12px;background:#fff;display:flex;gap:12px;align-items:center">
+<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div class="duotone" style="width:64px;height:52px;flex:none;background:repeating-linear-gradient(135deg,var(--color-accent-200) 0 5px,var(--color-accent-100) 5px 10px)"></div>
+<div style="min-width:0">
+<div style="font-family:var(--font-heading);font-size:17px;line-height:1.1">{{ selected.title }}</div>
+<div style="font-size:11.5px;color:var(--color-neutral-700)">{{ selected.meta }}</div>
+<div style="font:500 11px/1 ui-monospace,Menlo,monospace;color:var(--color-accent-800);margin-top:5px">FLAT FEE {{ selected.fee }} · RISPARMI {{ selected.saving }}</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLista }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:22px;padding:0 16px 24px">
+<sc-for list="{{ results }}" as="p" hint-placeholder-count="3">
+<div onClick="{{ p.open }}" class="blueprint" style="background:#fff;cursor:pointer">
+<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div class="duotone" style="position:relative;height:168px;background:repeating-linear-gradient(135deg,var(--color-accent-200) 0 6px,var(--color-accent-100) 6px 12px);border-bottom:1px solid var(--color-divider)">
+<div style="position:absolute;left:10px;top:10px;font:500 9px/1 ui-monospace,Menlo,monospace;letter-spacing:.1em;color:var(--color-accent-800)">FOTO IMMOBILE</div>
+<div style="position:absolute;right:0;bottom:0;background:var(--color-accent-900);color:#fff;padding:8px 12px 7px;display:flex;align-items:baseline;gap:7px">
+<span style="font:500 9px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;opacity:.75">FLAT FEE</span>
+<span style="font-family:var(--font-heading);font-weight:600;font-size:21px;line-height:1">{{ p.fee }}</span>
+</div>
+</div>
+<div style="padding:13px 14px 14px">
+<div style="font:500 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--color-neutral-600);margin-bottom:6px">{{ p.city }}</div>
+<div style="font-family:var(--font-heading);font-weight:600;font-size:22px;line-height:1.08;letter-spacing:-.01em;margin-bottom:4px">{{ p.title }}</div>
+<div style="font-size:12.5px;color:var(--color-neutral-700);margin-bottom:12px">{{ p.meta }}</div>
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding-top:11px;border-top:1px solid var(--color-divider)">
+<div>
+<div style="font-family:var(--font-heading);font-size:24px;line-height:1">{{ p.price }}</div>
+<div style="font-size:10.5px;color:var(--color-neutral-600);text-decoration:line-through">agenzia 3%: {{ p.agency }}</div>
+</div>
+<div style="text-align:right">
+<div style="font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--color-accent-800)">RISPARMI {{ p.saving }}</div>
+<div style="font-size:10.5px;color:var(--color-neutral-600)">tariffa nota in anticipo</div>
+</div>
+</div>
+</div>
+</div>
+</sc-for>
+
+<sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+<div class="blueprint" style="padding:26px 16px;text-align:center">
+<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div style="font-family:var(--font-heading);font-size:20px">Nessun immobile</div>
+<div style="font-size:12.5px;color:var(--color-neutral-700)">Prova a rimuovere un filtro o a cercare un'altra città.</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<div style="height:76px"></div>
+
+<div style="position:sticky;bottom:0;z-index:30;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:var(--color-bg);border-top:1px solid var(--color-divider);padding:9px 0 26px">
+<sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="4">
+<div onClick="{{ tab.go }}" style="{{ tab.style }}">
+<div style="width:18px;height:18px;border:1.5px solid currentColor;position:relative">
+<div style="{{ tab.mark }}"></div>
+</div>
+<span style="font:500 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em">{{ tab.label }}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="position:sticky;bottom:0;height:0;z-index:60">
+<sc-if value="{{ sheetTiers }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeSheet }}" style="position:absolute;left:0;right:0;bottom:0;height:874px;background:color-mix(in srgb,var(--color-accent-900) 45%,transparent);display:flex;align-items:flex-end">
+<div style="width:100%;background:var(--color-bg);border-top:1px solid var(--color-accent-900);padding:20px 16px 34px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px">
+<h3 style="margin:0;font-size:24px">Tariffa acquirente</h3>
+<span style="font:500 11px/1 ui-monospace,Menlo,monospace;color:var(--color-accent-700)">CHIUDI</span>
+</div>
+<p style="font-size:12.5px;color:var(--color-neutral-700);margin:0 0 14px">Cinque scaglioni sul prezzo di acquisto. Nessuna percentuale, nessuna sorpresa al rogito.</p>
+<sc-for list="{{ tiers }}" as="t" hint-placeholder-count="5">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--color-divider)">
+<span style="font-size:13px;color:var(--color-neutral-800)">{{ t.range }}</span>
+<span style="font-family:var(--font-heading);font-weight:600;font-size:20px">{{ t.fee }}</span>
+</div>
+</sc-for>
+<div style="font:500 10px/1.5 ui-monospace,Menlo,monospace;color:var(--color-neutral-600);margin-top:12px">DOVUTA SOLO A VISITA CONFERMATA E PROPOSTA ACCETTATA.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetSoon }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeSheet }}" style="position:absolute;left:0;right:0;bottom:0;height:874px;z-index:61;background:color-mix(in srgb,var(--color-accent-900) 45%,transparent);display:flex;align-items:center;justify-content:center;padding:24px">
+<div class="blueprint" style="background:var(--color-bg);padding:20px;text-align:center">
+<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+<div style="font-family:var(--font-heading);font-size:21px;line-height:1.1">{{ soonTitle }}</div>
+<div style="font-size:12.5px;color:var(--color-neutral-700);margin-top:6px">Fuori dalla Schermata 01. Tocca per chiudere.</div>
+</div>
+</div>
+</sc-if>
+</div>
+
+</div>
+</x-import>
+</div>
+
+<div style="flex:1;min-width:320px;max-width:460px;padding-top:44px">
+<div style="font:500 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--color-accent-700);margin-bottom:14px">NOTE DI PROGETTO</div>
+<h2 style="margin:0 0 10px;font-size:28px;letter-spacing:-.015em">Il badge è il prodotto</h2>
+<p style="font-size:14px;line-height:1.6;color:var(--color-neutral-800);margin:0 0 22px;text-wrap:pretty">Ogni card porta la Flat Fee in un blocco pieno in basso a destra, l'unico elemento solido della schermata: è l'ancora del posizionamento. Sotto, il prezzo dell'immobile è affiancato al costo agenzia barrato, così il confronto avviene dentro la card e non in un claim di marketing.</p>
+
+<div style="display:flex;flex-direction:column;gap:1px;background:var(--color-divider);margin-bottom:22px">
+<sc-for list="{{ notes }}" as="n" hint-placeholder-count="4">
+<div style="background:var(--color-bg);padding:12px 0">
+<div style="font:500 9.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--color-neutral-600);margin-bottom:5px">{{ n.k }}</div>
+<div style="font-size:13.5px;line-height:1.5;color:var(--color-neutral-800)">{{ n.v }}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="font:500 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--color-accent-700);margin-bottom:12px">PROSSIMI PASSI</div>
+<div style="font-size:13.5px;line-height:1.7;color:var(--color-neutral-800)">Schermata 02 con galleria e area Trasparenza sfocata + OTP · slot Three.js per la planimetria · varianti di palette se vuoi allontanarti dallo steel verso il terracotta mediterraneo.</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1080,&quot;height&quot;:1040}}">
+const EUR = n => n.toLocaleString('it-IT') + ' €';
+const TIERS = [
+  { max: 100000, fee: 1290, range: 'Fino a 100.000 €' },
+  { max: 200000, fee: 1990, range: '100.000 – 200.000 €' },
+  { max: 350000, fee: 2890, range: '200.000 – 350.000 €' },
+  { max: 500000, fee: 3890, range: '350.000 – 500.000 €' },
+  { max: Infinity, fee: 4990, range: 'Oltre 500.000 €' },
+];
+const feeFor = p => TIERS.find(t => p <= t.max).fee;
+
+const DATA = [
+  { id: 1, city: 'MILANO · ISOLA', title: 'Via Borsieri 24', price: 189000, mq: 72, locali: 3, piano: 4, lift: true, x: 30, y: 26 },
+  { id: 2, city: 'TORINO · CROCETTA', title: 'Corso Einaudi 9', price: 340000, mq: 118, locali: 5, piano: 2, lift: true, x: 66, y: 38 },
+  { id: 3, city: 'BOLOGNA · BOLOGNINA', title: 'Via Ferrarese 111', price: 95000, mq: 55, locali: 2, piano: 1, lift: false, x: 46, y: 62 },
+  { id: 4, city: 'ROMA · OSTIENSE', title: 'Via del Porto Fluviale 7', price: 465000, mq: 132, locali: 4, piano: 3, lift: true, x: 22, y: 74 },
+  { id: 5, city: 'FIRENZE · RIFREDI', title: 'Via delle Panche 40', price: 148000, mq: 64, locali: 3, piano: 5, lift: true, x: 78, y: 68 },
+  { id: 6, city: 'NAPOLI · VOMERO', title: 'Via Cimarosa 82', price: 620000, mq: 165, locali: 5, piano: 6, lift: true, x: 56, y: 16 },
+];
+
+const CHIPS = [
+  { id: 'sub200', label: '≤ 200.000 €', test: p => p.price <= 200000 },
+  { id: 'l3', label: '3+ locali', test: p => p.locali >= 3 },
+  { id: 'lift', label: 'Ascensore', test: p => p.lift },
+  { id: 'fee2', label: 'Flat Fee ≤ 2.000 €', test: p => feeFor(p.price) <= 2000 },
+];
+
+const TABS = [
+  { id: 'cerca', label: 'CERCA', mark: 'position:absolute;inset:4px;border:1.5px solid currentColor;border-radius:50%' },
+  { id: 'mappa', label: 'MAPPA', mark: 'position:absolute;left:50%;top:-1.5px;bottom:-1.5px;width:1.5px;background:currentColor' },
+  { id: 'salvati', label: 'SALVATI', mark: 'position:absolute;left:3px;right:3px;top:50%;height:1.5px;background:currentColor' },
+  { id: 'profilo', label: 'PROFILO', mark: 'position:absolute;left:4px;right:4px;bottom:3px;height:6px;border:1.5px solid currentColor;border-bottom:0' },
+];
+
+const chipBase = 'flex:none;padding:7px 11px;border:1px solid;font:500 11.5px/1 var(--font-body);letter-spacing:.01em;cursor:pointer;white-space:nowrap;user-select:none;';
+const segBase = 'padding:6px 14px 5px;font-family:var(--font-heading);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;';
+const tabBase = 'display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;';
+
+class Component extends DCLogic {
+  state = { query: '', view: 'lista', active: [], selected: 1, sheet: null, soonTitle: '' };
+
+  results() {
+    const q = this.state.query.trim().toLowerCase();
+    return DATA.filter(p => {
+      if (q && !(p.city + ' ' + p.title).toLowerCase().includes(q)) return false;
+      return this.state.active.every(id => CHIPS.find(c => c.id === id).test(p));
+    });
+  }
+
+  decorate(p) {
+    const fee = feeFor(p.price);
+    const agency = Math.round(p.price * 0.03 * 1.22 / 10) * 10;
+    return {
+      ...p,
+      fee: EUR(fee), price: EUR(p.price), agency: EUR(agency), saving: EUR(agency - fee),
+      meta: p.mq + ' m² · ' + p.locali + ' locali · piano ' + p.piano,
+      open: () => this.setState({ sheet: 'soon', soonTitle: 'Dettaglio ' + p.title }),
+    };
+  }
+
+  toggleChip(id) {
+    this.setState(s => ({ active: s.active.includes(id) ? s.active.filter(x => x !== id) : [...s.active, id] }));
+  }
+
+  renderVals() {
+    const s = this.state;
+    const res = this.results();
+    const sel = DATA.find(p => p.id === s.selected) || DATA[0];
+    const on = 'background:var(--color-accent);color:#fff;border-color:var(--color-accent);';
+    const off = 'background:transparent;color:var(--color-neutral-800);border-color:var(--color-divider);';
+    return {
+      query: s.query,
+      onQuery: e => this.setState({ query: e.target.value }),
+      noop: () => {},
+      countLabel: res.length + (res.length === 1 ? ' IMMOBILE' : ' IMMOBILI') + ' · TARIFFA NOTA',
+      chips: CHIPS.map(c => ({
+        label: c.label,
+        style: chipBase + (s.active.includes(c.id) ? on : off),
+        toggle: () => this.toggleChip(c.id),
+      })),
+      isLista: s.view === 'lista',
+      isMappa: s.view === 'mappa',
+      isEmpty: res.length === 0,
+      showLista: () => this.setState({ view: 'lista' }),
+      showMappa: () => this.setState({ view: 'mappa' }),
+      segListaStyle: segBase + (s.view === 'lista' ? 'background:var(--color-accent-900);color:#fff;' : 'background:transparent;color:var(--color-neutral-700);'),
+      segMappaStyle: segBase + (s.view === 'mappa' ? 'background:var(--color-accent-900);color:#fff;' : 'background:transparent;color:var(--color-neutral-700);'),
+      results: res.map(p => this.decorate(p)),
+      pins: res.map(p => ({
+        fee: EUR(feeFor(p.price)).replace(' €', ''),
+        select: () => this.setState({ selected: p.id }),
+        style: 'position:absolute;left:' + p.x + '%;top:' + p.y + '%;transform:translate(-50%,-50%);padding:5px 8px;font:600 11px/1 ui-monospace,Menlo,monospace;cursor:pointer;border:1px solid var(--color-accent-900);' +
+          (p.id === s.selected ? 'background:var(--color-accent-900);color:#fff;z-index:2;' : 'background:#fff;color:var(--color-accent-900);'),
+      })),
+      selected: this.decorate(sel),
+      tabs: TABS.map(t => {
+        const act = (t.id === 'mappa' && s.view === 'mappa') || (t.id === 'cerca' && s.view === 'lista');
+        return {
+          label: t.label,
+          mark: t.mark,
+          style: tabBase + (act ? 'color:var(--color-accent-800);' : 'color:var(--color-neutral-500);'),
+          go: () => {
+            if (t.id === 'mappa') this.setState({ view: 'mappa' });
+            else if (t.id === 'cerca') this.setState({ view: 'lista' });
+            else this.setState({ sheet: 'soon', soonTitle: t.label.charAt(0) + t.label.slice(1).toLowerCase() });
+          },
+        };
+      }),
+      openTiers: () => this.setState({ sheet: 'tiers' }),
+      openSoon: () => this.setState({ sheet: 'soon', soonTitle: 'Menu' }),
+      closeSheet: () => this.setState({ sheet: null }),
+      sheetTiers: s.sheet === 'tiers',
+      sheetSoon: s.sheet === 'soon',
+      soonTitle: s.soonTitle,
+      tiers: TIERS.map(t => ({ range: t.range, fee: EUR(t.fee) })),
+      notes: [
+        { k: 'RICERCA', v: 'Un solo campo (città, zona, indirizzo) più quattro filtri come chip: il filtro “Flat Fee ≤ 2.000 €” fa cercare per costo del servizio, non solo per prezzo casa.' },
+        { k: 'MAPPA', v: 'I pin mostrano la tariffa, non il prezzo. Toccandone uno si aggiorna la scheda sotto la mappa.' },
+        { k: 'TARIFFA', v: 'Gli scaglioni vivono in un foglio richiamabile dall’hero: dichiarati subito, senza costringere allo scroll.' },
+        { k: 'SISTEMA', v: 'Industry: fondo #f2f2f3, accento steel #5980a6, Barlow Condensed su Barlow, cornici hairline con marchi di registro. Nessun blu corporate, nessun angolo morbido.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
