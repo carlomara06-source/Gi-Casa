@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #f5f1e9;
+  --color-surface: #fffdf9;
+  --color-text: #15120e;
+  --color-divider: color-mix(in srgb, #15120e 12%, transparent);
+
+  --color-accent-100: #fbeee7;
+  --color-accent-200: #f6d8c9;
+  --color-accent-300: #eeb298;
+  --color-accent-400: #e28c69;
+  --color-accent-500: #d2643c;
+  --color-accent-600: #c2461d;
+  --color-accent-700: #993317;
+  --color-accent-800: #12293d;
+  --color-accent-900: #0a1826;
+  --color-accent: var(--color-accent-600);
+
+  --color-blue-100: #eef4f8;
+  --color-blue-200: #d6e5ee;
+  --color-blue-300: #a5c7dc;
+  --color-blue-400: #6fa1c1;
+  --color-blue-500: #3f7aa3;
+  --color-blue-600: #27567a;
+  --color-blue-700: #1b3c56;
+  --color-blue-800: #12293d;
+  --color-blue-900: #0a1826;
+
+  --color-neutral-100: #f7f2e9;
+  --color-neutral-200: #e9e0d2;
+  --color-neutral-300: #d4c7b3;
+  --color-neutral-400: #b6a68e;
+  --color-neutral-500: #93816b;
+  --color-neutral-600: #6f5f4c;
+  --color-neutral-700: #52463a;
+  --color-neutral-800: #332c24;
+  --color-neutral-900: #1e1914;
+
+  --color-sun-200: #f4e4bd;
+  --color-sun-700: #7a5410;
+  --color-sun: #d3a534;
+
+  --shadow-card: 0 1px 1px rgba(16, 25, 35, 0.04), 0 18px 34px -26px rgba(16, 25, 35, 0.32);
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-text: var(--color-text);
+  --color-divider: var(--color-divider);
+
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-200: var(--color-accent-200);
+  --color-accent-300: var(--color-accent-300);
+  --color-accent-400: var(--color-accent-400);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --color-accent-700: var(--color-accent-700);
+  --color-accent-800: var(--color-accent-800);
+  --color-accent-900: var(--color-accent-900);
+  --color-accent: var(--color-accent);
+
+  --color-blue-100: var(--color-blue-100);
+  --color-blue-200: var(--color-blue-200);
+  --color-blue-300: var(--color-blue-300);
+  --color-blue-400: var(--color-blue-400);
+  --color-blue-500: var(--color-blue-500);
+  --color-blue-600: var(--color-blue-600);
+  --color-blue-700: var(--color-blue-700);
+  --color-blue-800: var(--color-blue-800);
+  --color-blue-900: var(--color-blue-900);
+
+  --color-neutral-100: var(--color-neutral-100);
+  --color-neutral-200: var(--color-neutral-200);
+  --color-neutral-300: var(--color-neutral-300);
+  --color-neutral-400: var(--color-neutral-400);
+  --color-neutral-500: var(--color-neutral-500);
+  --color-neutral-600: var(--color-neutral-600);
+  --color-neutral-700: var(--color-neutral-700);
+  --color-neutral-800: var(--color-neutral-800);
+  --color-neutral-900: var(--color-neutral-900);
+
+  --color-sun-200: var(--color-sun-200);
+  --color-sun-700: var(--color-sun-700);
+  --color-sun: var(--color-sun);
+
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-heading: var(--font-plus-jakarta), system-ui, sans-serif;
+  --font-body: var(--font-plus-jakarta), system-ui, sans-serif;
+  --font-label: var(--font-plus-jakarta), system-ui, sans-serif;
+
+  --shadow-card: var(--shadow-card);
+}
+
+body {
+  margin: 0;
+  background: var(--color-blue-900);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.022em;
+}
+
+input, input::placeholder {
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+input[type="range"] {
+  accent-color: var(--color-accent);
+}
+
+.blueprint {
+  border: 1px solid var(--color-divider);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  animation: riseIn 0.5s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

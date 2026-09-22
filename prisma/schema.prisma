@@ -1,0 +1,458 @@
+// Giàcasa — schema for the hybrid PropTech platform (portal + licensed agency).
+// See chats/chat1.md and chats/chat2.md for the product spec this implements.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Accounts ────────────────────────────────────────────────────────────
+
+enum Role {
+  BUYER
+  SELLER
+  AGENT
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  name      String?
+  email     String?  @unique
+  role      Role     @default(BUYER)
+  createdAt DateTime @default(now())
+
+  listings       Listing[]          @relation("SellerListings")
+  agentProfile   AgentProfile?
+  visitsAsBuyer  Visit[]            @relation("BuyerVisits")
+  visitsAsAgent  Visit[]            @relation("AgentVisits")
+  proposals      Proposal[]         @relation("BuyerProposals")
+  foglioVisite   FoglioVisita[]
+  valuations     ValuationRequest[]
+  chatMessages   ChatMessage[]
+  threadsAsBuyer ChatThread[]       @relation("BuyerThreads")
+  threadsAsAgent ChatThread[]       @relation("AgentThreads")
+  savedListings  SavedListing[]
+}
+
+model AgentProfile {
+  id          String  @id @default(cuid())
+  userId      String  @unique
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  zone        String
+  ratingAvg   Float   @default(4.9)
+  reviewCount Int     @default(0)
+  bio         String?
+
+  visits Visit[] @relation("AgentProfileVisits")
+}
+
+// ── Listings ────────────────────────────────────────────────────────────
+
+enum ListingStatus {
+  DRAFT
+  PUBLISHED
+  PAUSED
+  SOLD
+}
+
+enum PropertyState {
+  DA_RISTRUTTURARE
+  BUONO_STATO
+  RISTRUTTURATO
+  NUOVO
+}
+
+enum PropertyType {
+  APPARTAMENTO
+  VILLA
+  ATTICO
+  RUSTICO
+}
+
+model Listing {
+  id       String @id @default(cuid())
+  seller   User   @relation("SellerListings", fields: [sellerId], references: [id])
+  sellerId String
+
+  title       String
+  addressLine String
+  city        String
+  zone        String
+  lat         Float?
+  lng         Float?
+
+  type             PropertyType  @default(APPARTAMENTO)
+  price            Int
+  mq               Int
+  locali           Int
+  bagni            Int           @default(1)
+  piano            Int
+  hasLift          Boolean       @default(false)
+  stato            PropertyState @default(BUONO_STATO)
+  classeEnergetica String        @default("D")
+  balcone          Boolean       @default(false)
+  cantina          Boolean       @default(false)
+  box              Boolean       @default(false)
+  giardino         Boolean       @default(false)
+  arredato         Boolean       @default(false)
+  description      String        @default("")
+
+  // Catasto / dati amministrativi (schermata 06 · gestionale)
+  catastoFoglio     String?
+  catastoParticella String?
+  catastoSubalterno String?
+  renditaCatastale  Int?
+  speseCondominiali Int?
+  disponibilita     String  @default("Libera")
+
+  status      ListingStatus @default(DRAFT)
+  publishedAt DateTime?
+  views       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  photos       ListingPhoto[]
+  documents    Document[]
+  subscription Subscription?
+  mandate      Mandate?
+  visits       Visit[]
+  proposals    Proposal[]
+  portalFeeds  PortalSyndication[]
+  chatThreads  ChatThread[]
+  savedBy      SavedListing[]
+
+  @@index([city, zone])
+  @@index([status])
+}
+
+model SavedListing {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+}
+
+model ListingPhoto {
+  id        String  @id @default(cuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  position  Int     @default(0)
+  caption   String  @default("")
+}
+
+// ── Documents (visura / planimetria / APE …) ───────────────────────────
+
+enum DocumentType {
+  PLANIMETRIA
+  VISURA
+  APE
+  ATTO_PROVENIENZA
+  REGOLAMENTO_CONDOMINIALE
+}
+
+enum DocumentStatus {
+  MISSING
+  UPLOADED
+  VERIFIED
+}
+
+model Document {
+  id         String         @id @default(cuid())
+  listingId  String
+  listing    Listing        @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  type       DocumentType
+  status     DocumentStatus @default(MISSING)
+  fileUrl    String?
+  meta       String         @default("")
+  verifiedAt DateTime?
+  verifiedBy String?
+}
+
+// ── Exclusivity mandate (schermata 07) ─────────────────────────────────
+
+enum MandateStatus {
+  ACTIVE
+  WITHDRAWN
+  EXPIRED
+}
+
+model Mandate {
+  id               String        @id @default(cuid())
+  listingId        String        @unique
+  listing          Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  status           MandateStatus @default(ACTIVE)
+  signedAt         DateTime      @default(now())
+  expiresAt        DateTime
+  withdrawableFrom DateTime
+  withdrawnAt      DateTime?
+  signatureHash    String
+  legalTextVersion String        @default("2026-09")
+}
+
+// ── Subscriptions / seller plans (schermata 03, 04) ────────────────────
+
+enum Plan {
+  FREE
+  VISIBILITY_BOOST
+  SMART_AGENT
+  CONCIERGE_LUXURY
+}
+
+enum BillingCycle {
+  WEEK
+  FOUR_WEEK
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAUSED
+  CANCELED
+}
+
+model Subscription {
+  id        String             @id @default(cuid())
+  listingId String             @unique
+  listing   Listing            @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  plan      Plan               @default(FREE)
+  cycle     BillingCycle       @default(WEEK)
+  status    SubscriptionStatus @default(ACTIVE)
+
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  currentPeriodEnd     DateTime?
+
+  welcomeBoxSentAt DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+// ── Portal syndication (schermata 02, 12) ──────────────────────────────
+
+enum Portal {
+  IMMOBILIARE
+  IDEALISTA
+  CASA_IT
+}
+
+model PortalSyndication {
+  id           String    @id @default(cuid())
+  listingId    String
+  listing      Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  portal       Portal
+  enabled      Boolean   @default(true)
+  showBanner   Boolean   @default(true)
+  lastPushedAt DateTime?
+
+  @@unique([listingId, portal])
+}
+
+// ── Visits / appointments (schermata 10, gestionale, app agente) ──────
+
+enum VisitStatus {
+  REQUESTED
+  CONFIRMED
+  DONE
+  CANCELED
+}
+
+model Visit {
+  id             String        @id @default(cuid())
+  listingId      String
+  listing        Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId        String
+  buyer          User          @relation("BuyerVisits", fields: [buyerId], references: [id])
+  agentId        String?
+  agent          User?         @relation("AgentVisits", fields: [agentId], references: [id])
+  agentProfileId String?
+  agentProfile   AgentProfile? @relation("AgentProfileVisits", fields: [agentProfileId], references: [id])
+
+  scheduledAt DateTime
+  status      VisitStatus @default(REQUESTED)
+
+  // 29€ appointment fee, of which 15€ goes to the agent (agent-only visibility).
+  feeCents        Int @default(2900)
+  agentShareCents Int @default(1500)
+
+  foglioVisitaId String?
+  foglioVisita   FoglioVisita? @relation(fields: [foglioVisitaId], references: [id])
+
+  report VisitReport?
+
+  createdAt DateTime @default(now())
+}
+
+model VisitReport {
+  id            String   @id @default(cuid())
+  visitId       String   @unique
+  visit         Visit    @relation(fields: [visitId], references: [id], onDelete: Cascade)
+  outcome       String
+  interestScore Int
+  checklist     String[]
+  notes         String   @default("")
+  sentAt        DateTime @default(now())
+}
+
+// ── OTP / e-signature (Foglio di Visita, FEA) ──────────────────────────
+
+enum OtpPurpose {
+  LOGIN
+  FOGLIO_VISITA
+  FEA_SIGNATURE
+}
+
+enum OtpStatus {
+  PENDING
+  APPROVED
+  EXPIRED
+  CANCELED
+}
+
+model OtpVerification {
+  id         String     @id @default(cuid())
+  phone      String
+  purpose    OtpPurpose
+  status     OtpStatus  @default(PENDING)
+  twilioSid  String?
+  // Only set when Twilio Verify isn't configured (dev/sandbox mode): a
+  // locally generated code, checked without calling out to Twilio.
+  devCode    String?
+  createdAt  DateTime   @default(now())
+  expiresAt  DateTime
+  consumedAt DateTime?
+
+  foglioVisita FoglioVisita?
+}
+
+// Signing an OTP for a listing's documents stands in for the buyer's legal
+// signature on the "Foglio di Visita" (visit sheet) and unlocks planimetria /
+// visura / APE for that listing.
+model FoglioVisita {
+  id                String          @id @default(cuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id])
+  listingId         String
+  otpVerificationId String          @unique
+  otpVerification   OtpVerification @relation(fields: [otpVerificationId], references: [id])
+  signedAt          DateTime        @default(now())
+
+  visits Visit[]
+}
+
+// ── Proposals (offers) — schermata 03, 11 ──────────────────────────────
+
+enum ProposalStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COUNTERED
+  EXPIRED
+}
+
+model Proposal {
+  id        String  @id @default(cuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId   String
+  buyer     User    @relation("BuyerProposals", fields: [buyerId], references: [id])
+
+  amount       Int
+  depositPct   Int
+  depositCents Int
+  validDays    Int
+  conditions   String[]
+
+  status ProposalStatus @default(PENDING)
+
+  // FEA signature (buyer)
+  amlIdDone     Boolean   @default(false)
+  amlCfDone     Boolean   @default(false)
+  amlFundsDone  Boolean   @default(false)
+  signedAt      DateTime?
+  signatureHash String?
+
+  // Counter-proposal chain (seller counters the buyer's proposal)
+  counterOfId   String?   @unique
+  counterOf     Proposal? @relation("ProposalCounter", fields: [counterOfId], references: [id])
+  counterBy     Proposal? @relation("ProposalCounter")
+  counterAmount Int?
+
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+  decidedAt DateTime?
+}
+
+// ── AI valuation (schermata 09) ────────────────────────────────────────
+
+model ValuationRequest {
+  id     String  @id @default(cuid())
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  address String
+  mq      Int
+  piano   Int
+  stato   PropertyState
+
+  balconiMq       Int
+  cantinaMq       Int
+  annoCostruzione Int
+  ascensore       Boolean
+  esposizione     String
+  affaccio        String
+  luminosita      String
+
+  vuZonaEurMq Int
+  kTotale     Float
+  resultLow   Int
+  resultMid   Int
+  resultHigh  Int
+
+  createdAt DateTime @default(now())
+}
+
+// ── Chat (buyer / seller / agent / support) — schermata 13 ────────────
+
+enum ChatKind {
+  BUYER_SELLER
+  AGENT
+  SUPPORT
+}
+
+model ChatThread {
+  id        String   @id @default(cuid())
+  listingId String?
+  listing   Listing? @relation(fields: [listingId], references: [id])
+  kind      ChatKind @default(BUYER_SELLER)
+
+  buyerId String
+  buyer   User    @relation("BuyerThreads", fields: [buyerId], references: [id])
+  agentId String?
+  agent   User?   @relation("AgentThreads", fields: [agentId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id          String     @id @default(cuid())
+  threadId    String
+  thread      ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  senderId    String?
+  sender      User?      @relation(fields: [senderId], references: [id])
+  isSystem    Boolean    @default(false)
+  body        String
+  wasRedacted Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+}
